@@ -1,0 +1,88 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+class Task {
+public:
+    Task(const std::string& description, bool completed = false)
+       : description(description), completed(completed) {}
+
+    void markCompleted() {
+        completed = true;
+    }
+
+    void display() const {
+        cout << "Task: " << description << " - " << (completed ? "Completed" : "Not Completed") << std::endl;
+    }
+
+private:
+    string description;
+    bool completed;
+};
+
+class TaskManager {
+public:
+    void addTask(const std::string& description) {
+        tasks.push_back(Task(description));
+    }
+
+    void displayTasks() const {
+        cout << "Task List:" << std::endl;
+        for (size_t i = 0; i < tasks.size(); ++i) {
+            std::cout << "[" << i + 1 << "] ";
+            tasks[i].display();
+        }
+    }
+
+    void markTaskCompleted(int index) {
+        if (index >= 1 && index <= static_cast<int>(tasks.size())) {
+            tasks[index - 1].markCompleted();
+            cout << "Task marked as completed." << std::endl;
+        } else {
+            cout << "Invalid task index." << std::endl;
+        }
+    }
+
+private:
+    vector<Task> tasks;
+};
+
+int main() {
+    TaskManager taskManager;
+
+    while (true) {
+        cout << "\nOptions:\n1. Add Task\n2. Display Tasks\n3. Mark Task as Completed\n4. Exit\n";
+        int choice;
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                string description;
+                cout << "Enter task description: ";
+                cin.ignore(); // Ignore any previous newline character
+                getline(std::cin, description);
+                taskManager.addTask(description);
+                break;
+            }
+            case 2:
+                taskManager.displayTasks();
+                break;
+            case 3: {
+                int index;
+                cout << "Enter task index to mark as completed: ";
+                cin >> index;
+                taskManager.markTaskCompleted(index);
+                break;
+            }
+            case 4:
+                cout << "Exiting program.\n";
+                return 0;
+            default:
+                cout << "Invalid choice. Try again.\n";
+        }
+    }
+
+    return 0;
+}
